@@ -19,8 +19,7 @@ class FirebaseAuthFacade implements IAuthFacade {
     final emailAddressStr = emailAddress.getOrCrash();
     final passStr = password.getOrCrash();
     try {
-      return await this
-          ._firebaseAuth
+      return await _firebaseAuth
           .createUserWithEmailAndPassword(
               email: emailAddressStr, password: passStr)
           .then((_) => right(unit));
@@ -39,8 +38,7 @@ class FirebaseAuthFacade implements IAuthFacade {
     final emailAddressStr = emailAddress.getOrCrash();
     final passStr = password.getOrCrash();
     try {
-      return await this
-          ._firebaseAuth
+      return await _firebaseAuth
           .signInWithEmailAndPassword(email: emailAddressStr, password: passStr)
           .then((_) => right(unit));
     } on PlatformException catch (e) {
@@ -55,9 +53,9 @@ class FirebaseAuthFacade implements IAuthFacade {
   @override
   Future<Either<AuthFailure, Unit>> signInWithGoogle() async {
     try {
-      final googleUser = await this._googleSignIn.signIn();
+      final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        return left(AuthFailure.cancelledByUser());
+        return left(const AuthFailure.cancelledByUser());
       }
 
       final googleAuth = await googleUser.authentication;
@@ -68,7 +66,7 @@ class FirebaseAuthFacade implements IAuthFacade {
           .signInWithCredential(authCredential)
           .then((r) => right(unit));
     } on PlatformException catch (_) {
-      return left(AuthFailure.serverError());
+      return left(const AuthFailure.serverError());
     }
   }
 }
